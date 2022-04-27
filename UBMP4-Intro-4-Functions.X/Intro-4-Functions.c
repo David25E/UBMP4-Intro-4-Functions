@@ -28,23 +28,17 @@ unsigned char button;
  
 unsigned char button_pressed(void)
 {
-   if(SW4 == 0)
+   if(SW4 == 0 || SW3 == 0)
    {
        return(UP);
    }
-   else if(SW5 == 0)
+   else if(SW5 == 0 || SW2 == 0)
    {
        return(DOWN);
    }
    else
    {
        return(noButton);
-   }
-   if(SW2 == 0){
-       return(DOWN);
-   }
-   else if(SW3 == 0){
-       return(UP);
    }
 }
 
@@ -84,10 +78,10 @@ int main(void)
        {
            LED5Brightness -= 1;
        }
-       if(button == DOWN){
+       if(button == DOWN & SW2 == 0){
            LED5Brightness = 0;
        }
-       if(button == UP){
+       if(button == UP & SW3 == 0){
            LED5Brightness = 254;
        }
 
@@ -221,6 +215,68 @@ The variable that gets transferred is the global variable of unsigned char LED5B
 *      these buttons will over-write the current LED5Brightness value with
 *      either 255 or 0, while still allowing SW4 and SW5 to adjust the
 *      brightness in smaller increments when pressed.
+
+unsigned char button_pressed(void)
+{
+   if(SW4 == 0 || SW3 == 0)      // added SW3 == 0
+   {
+       return(UP);               //added to correspond with the functions of the other buttons
+   }
+   else if(SW5 == 0 || SW2 == 0) //added SW2 == 0
+   {
+       return(DOWN);
+   }
+   else
+   {
+       return(noButton);
+   }
+}
+
+void pwm_LED5(unsigned char pwmValue)
+{
+   for(unsigned char t = 255; t != 0; t --)
+   {
+       if(pwmValue == t)
+       {
+           LED5 = 1;
+       }
+       __delay_us(20);
+   }
+   // End the pulse if pwmValue < 255
+   if(pwmValue < 255)
+   {
+       LED5 = 0;
+   }
+}
+
+int main(void)
+{
+   OSC_config();               // Configure internal oscillator for 48 MHz
+   UBMP4_config();             // Configure on-board UBMP4 I/O devices
+    
+   while(1)
+    {
+       // Read up/down buttons and adjust LED5 brightness
+       button = button_pressed();
+      
+       if(button == UP && LED5Brightness < 255)
+       {
+           LED5Brightness += 1;
+       }
+ 
+       if(button == DOWN && LED5Brightness > 0)
+       {
+           LED5Brightness -= 1;
+       }
+       if(button == DOWN & SW2 == 0){   //added this if statement
+           LED5Brightness = 0;
+       }
+       if(button == UP & SW3 == 0){     //added this if statement
+           LED5Brightness = 254;
+       }
+
+       // PWM LED5 with current brightness
+       pwm_LED5(LED5Brightness);
  
 
 *
