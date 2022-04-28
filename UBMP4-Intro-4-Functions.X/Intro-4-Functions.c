@@ -25,38 +25,30 @@ const char DOWN = 2;
 // Program variable definitions
 unsigned char LED5Brightness = 125;
 unsigned char button;
- 
-unsigned char button_pressed(void)
-{
-   if(SW4 == 0 || SW3 == 0)
-   {
-       return(UP);
-   }
-   else if(SW5 == 0 || SW2 == 0)
-   {
-       return(DOWN);
-   }
-   else
-   {
-       return(noButton);
-   }
+
+unsigned char make_Tone(void){
+    unsigned int period = rand() % 900;
+    if(SW2 == 0){
+        return(period);
+    }
+    else if(SW3 == 0){
+        return(period);
+    }
+    else if(SW4 == 0){
+        return(period);
+    }
+    else if(SW5 == 0){
+        return(period);
+    }
+    else{
+        return(noButton);
+    }
 }
 
-void pwm_LED5(unsigned char pwmValue)
-{
-   for(unsigned char t = 255; t != 0; t --)
-   {
-       if(pwmValue == t)
-       {
-           LED5 = 1;
-       }
-       __delay_us(20);
-   }
-   // End the pulse if pwmValue < 255
-   if(pwmValue < 255)
-   {
-       LED5 = 0;
-   }
+void makeSound(period){
+    for(unsigned int p = 0; p < period; p ++){
+        BEEPER = !BEEPER;
+    }
 }
 
 int main(void)
@@ -66,29 +58,20 @@ int main(void)
     
    while(1)
     {
-       // Read up/down buttons and adjust LED5 brightness
-       button = button_pressed();
-      
-       if(button == UP && LED5Brightness < 255)
-       {
-           LED5Brightness += 1;
-       }
- 
-       if(button == DOWN && LED5Brightness > 0)
-       {
-           LED5Brightness -= 1;
-       }
-       if(button == DOWN & SW2 == 0){
-           LED5Brightness = 0;
-       }
-       if(button == UP & SW3 == 0){
-           LED5Brightness = 254;
-       }
-
- 
-       // PWM LED5 with current brightness
-       pwm_LED5(LED5Brightness);
-      
+    unsigned int period = rand() % 900;
+    button = make_Tone();
+        if(button == period && SW2 == 0){
+            makeSound(period);
+        }
+        if(button == period && SW3 == 0){
+            makeSound(period);
+        }
+        if(button == period && SW4 ==0){
+            makeSound(period);
+        }
+        if(button == period && SW5 == 0){
+            makeSound(period);
+        }
        // Activate bootloader if SW1 is pressed.
        if(SW1 == 0)
        {
@@ -284,10 +267,96 @@ int main(void)
 *      which of the SW2 to SW5 switches is pressed, or return 0 if no switches
 *      are pressed. Then, create a function that will accept a number from 1 to
 *      4 that lights the corresponding LED beside each button.
+//Activity 2 constant definitions 
+const char ONE = 1;
+const char TWO = 2;
+const char THREE = 3;
+const char FOUR = 4;
+unsigned char return_Numbers(void){
+    if(SW2 == 0){
+        return(ONE);
+    }
+    else if(SW3 == 0){
+        return(TWO);
+    }
+    else if(SW4 == 0){
+        return(THREE);
+    }
+    else if(SW5 == 0){
+        return(FOUR);
+    }
+    else{
+        return(noButton);
+    }
+}
+
+
+int main(void)
+{
+   OSC_config();               // Configure internal oscillator for 48 MHz
+   UBMP4_config();             // Configure on-board UBMP4 I/O devices
+    
+   while(1)
+    {
+    button = return_Numbers();
+    if(button == ONE){
+        LED3 = 1;
+    }
+    if(button == TWO){
+        LED4 = 1;
+    }
+    if(button == THREE){
+        LED5 = 1;
+    }
+    if(button == FOUR){
+        LED6 = 1;
+    }
+    if(button == noButton){
+        LED3 = 0;
+        LED4 = 0;
+        LED5 = 0;
+        LED6 = 0;
+    }
 *
 * 3.   Create a sound function that receives a parameter representing a tone's
 *      period. Modify your button function, above, to return a variable that
 *      will be passed to the sound function to make four different tones.
+unsigned int period = ran(1, 900);
+unsigned char make_Tone(void){
+    if(SW1 == 0){
+        return(period);
+    }
+    else if(SW2 == 0){
+        return(period);
+    }
+    else if(SW3 == 0){
+        return(T);
+    }
+    else if(SW4 == 0){
+        return(FOUR);
+    }
+    else{
+        return(noButton);
+    }
+}
+button = make_Tone();
+
+void makeSound(int period){
+    for(unsigned int p = 0; p < period; p ++){
+        if(button == period && SW2 == 0){
+            BEEPER = !BEEPER;
+        }
+        if(button == period && SW3 == 0 ){
+            
+        }
+        if(button == period && SW4 == 0){
+            
+        }
+        if(button == period && SW5 == 0){
+            
+        }
+    }
+}
 *
 * 4.   A function that converts an 8-bit binary value into its decimal
 *      equivalent would be useful for helping us to debug our programs. Create
