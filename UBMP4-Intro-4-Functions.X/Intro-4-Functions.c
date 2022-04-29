@@ -25,32 +25,37 @@ const char DOWN = 2;
 // Program variable definitions
 unsigned char LED5Brightness = 125;
 unsigned char button;
-unsigned int period1 = 187;
-unsigned int period2 = 371;
-unsigned int period3 = 619;
-unsigned int period4 = 924;
 
-unsigned char make_Tone(void){
-    if(SW2 == 0){
-        return(period);
+unsigned char button_pressed(void)
+{
+    if(SW4 == 0)
+    {
+        return(UP);
     }
-    else if(SW3 == 0){
-        return(period);
+    else if(SW5 == 0)
+    {
+        return(DOWN);
     }
-    else if(SW4 == 0){
-        return(period);
-    }
-    else if(SW5 == 0){
-        return(period);
-    }
-    else{
+    else
+    {
         return(noButton);
     }
 }
 
-void makeSound(unsigned period){                        //How would I change this to pass it on easier, or is it even passing it on because I create the exact same period variable in the main function.
-    for(unsigned int p = 0; p < period; p --){
-        BEEPER = !BEEPER;
+void pwm_LED5(unsigned char pwmValue)
+{
+    for(unsigned char t = 255; t != 0; t --)
+    {
+        if(pwmValue == t)
+        {
+            LED5 = 1;
+        }
+        __delay_us(20);
+    }
+    // End the pulse if pwmValue < 255
+    if(pwmValue < 255)
+    {
+        LED5 = 0;
     }
 }
 
@@ -61,20 +66,22 @@ int main(void)
     
    while(1)
     {
-    unsigned int period = rand() % 900;                             // I make the exact same int period variable here.
-    button = make_Tone();
-        if(button == period && SW2 == 0){
-            makeSound(period);
+       // Read up/down buttons and adjust LED5 brightness
+        button = button_pressed();
+        
+        if(button == UP && LED5Brightness < 255)
+        {
+            LED5Brightness += 1;
         }
-        if(button == period && SW3 == 0){
-            makeSound(period);
+
+        if(button == DOWN && LED5Brightness > 0)
+        {
+            LED5Brightness -= 1;
         }
-        if(button == period && SW4 ==0){
-            makeSound(period);
-        }
-        if(button == period && SW5 == 0){
-            makeSound(period);
-        }
+
+        // PWM LED5 with current brightness
+        pwm_LED5(LED5Brightness);
+
        // Activate bootloader if SW1 is pressed.
        if(SW1 == 0)
        {
@@ -90,27 +97,27 @@ int main(void)
 *
 * 1.   Which function in this program will run first? How do you know?
 *
-pwm_LED5 will run first because it is the loop that allows the LED to turn on.
-The other functions control and adjust the brighness of the LED.
+The main function will be called first because that is its purpose, it allows a place for the program to start.
+However, the global variables and functions above the main function initialize/provide the information that invokes the main function.
  
 * 2.   What is the purpose of the 'unsigned char' variable type declaration in
 *      the button_pressed() function? Is it used by this function to receive
 *      a variable from, or return a variable to the main code?
 *
-The purpose of the 'unsigned char' variable type declaration is to only be able to deal with 8-bit and positive numbers.
-This function is used in the main function when it is called by using 'button = button_pressed().
+The purpose of the 'unsigned char' variable type declaration is to store 8 bit values, which are 8 bit variables that are passed onto the main function.
+Yes, it is used by this function because in the main function, the line "button = button_pressed()" allows the contents inside the function to be received and returned by the main function.
 * 3.   How does the function call statement 'button = button_pressed();' in the
 *      main code support your answer in 2, above?
  
-The function call statement 'button = button_pressed(); supports my answer since it is called to equal button.
-This allows the code to adjust the brightness of the LED.
+The function call statement 'button = button_pressed(); supports my answer because it allows the main function to receive the information inside the function.
+Without this line, the brightness controlling lines would not function.
 *
 * 4.   What is the purpose of the 'unsigned char' variable type declaration in
 *      the pwm_LED5() function? Where does the value of the variable come from?
 *      Where does this value get stored in the function?
  
-The purpose of the 'unsigned char' variable type declaration in the pwm_LED() function is to create a range for the brightness of LED5.
-The value of the variable comes from
+The purpose of the 'unsigned char' variable type declaration is the program to work with positive 8 bit values, since that is what the MCU is most efficient at handling.
+The value of this variable comes from the final line "pwm_LED5(LED5Brightness);" because it determines the brightness of LED5.
 *
 * 5.   C language compilers typically read through the entire program in a
 *      single pass, converting C code into machine code. The two functions,
@@ -324,68 +331,10 @@ int main(void)
 * 3.   Create a sound function that receives a parameter representing a tone's
 *      period. Modify your button function, above, to return a variable that
 *      will be passed to the sound function to make four different tones.
-unsigned int period = ran(1, 900);
-unsigned char make_Tone(void){
-    if(SW1 == 0){
-        return(period);
-    }
-    else if(SW2 == 0){
-        return(period);
-    }
-    else if(SW3 == 0){
-        return(T);
-    }
-    else if(SW4 == 0){
-        return(FOUR);
-    }
-    else{
-        return(noButton);
-    }
-}
-button = make_Tone();
-
-void makeSound(int period){
-    for(unsigned int p = 0; p < period; p ++){
-        if(button == period && SW2 == 0){
-            BEEPER = !BEEPER;
-        }
-        if(button == period && SW3 == 0 ){
-            
-        }
-        if(button == period && SW4 == 0){
-            
-        }
-        if(button == period && SW5 == 0){
-            
-        }
-    }
-}
-
-/////////
-unsigned char make_Tone(void){
-    unsigned int period = rand() % 900;
-    if(SW2 == 0){
-        return(period);
-    }
-    else if(SW3 == 0){
-        return(period);
-    }
-    else if(SW4 == 0){
-        return(period);
-    }
-    else if(SW5 == 0){
-        return(period);
-    }
-    else{
-        return(noButton);
-    }
-}
-
-void makeSound(unsigned period){                        //How would I change this to pass it on easier, or is it even passing it on because I create the exact same period variable in the main function.
-    for(unsigned int p = 0; p < period; p --){
-        BEEPER = !BEEPER;
-    }
-}
+unsigned int period1 = 187;
+unsigned int period2 = 371;
+unsigned int period3 = 619;
+unsigned int period4 = 924;
 
 int main(void)
 {
@@ -394,19 +343,22 @@ int main(void)
     
    while(1)
     {
-    unsigned int period = rand() % 900;                             // I make the exact same int period variable here.
-    button = make_Tone();
-        if(button == period && SW2 == 0){
-            makeSound(period);
+                                 
+        if(SW2 == 0){
+            BEEPER = !BEEPER;
+            __delay_us(period1);
         }
-        if(button == period && SW3 == 0){
-            makeSound(period);
+        if(SW3 == 0){
+            BEEPER = !BEEPER;
+            __delay_us(period2);
         }
-        if(button == period && SW4 ==0){
-            makeSound(period);
+        if(SW4 ==0){
+            BEEPER = !BEEPER;
+            __delay_us(period3);
         }
-        if(button == period && SW5 == 0){
-            makeSound(period);
+        if(SW5 == 0){
+            BEEPER = !BEEPER;
+            __delay_us(period4);
         }
 *
 * 4.   A function that converts an 8-bit binary value into its decimal
@@ -473,7 +425,7 @@ int main(void)
     
     button = binaryValues();
     unsigned char decimalNUM = eighth2 + seventh2 + sixth2 + fifth2 + fourth2 + third2 + second2 + first2;
-        if(decimalNUM == 162 && SW2 == 0){
-        LED5 = 1;
-        }
+    unsigned char varHundred = 0;
+    unsigned char varTen = 0;
+    unsigned char varOne = 0;
 */
