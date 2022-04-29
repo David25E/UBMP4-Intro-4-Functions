@@ -25,9 +25,12 @@ const char DOWN = 2;
 // Program variable definitions
 unsigned char LED5Brightness = 125;
 unsigned char button;
+unsigned int period1 = 187;
+unsigned int period2 = 371;
+unsigned int period3 = 619;
+unsigned int period4 = 924;
 
 unsigned char make_Tone(void){
-    unsigned int period = rand() % 900;
     if(SW2 == 0){
         return(period);
     }
@@ -45,8 +48,8 @@ unsigned char make_Tone(void){
     }
 }
 
-void makeSound(period){
-    for(unsigned int p = 0; p < period; p ++){
+void makeSound(unsigned period){                        //How would I change this to pass it on easier, or is it even passing it on because I create the exact same period variable in the main function.
+    for(unsigned int p = 0; p < period; p --){
         BEEPER = !BEEPER;
     }
 }
@@ -58,7 +61,7 @@ int main(void)
     
    while(1)
     {
-    unsigned int period = rand() % 900;
+    unsigned int period = rand() % 900;                             // I make the exact same int period variable here.
     button = make_Tone();
         if(button == period && SW2 == 0){
             makeSound(period);
@@ -357,6 +360,54 @@ void makeSound(int period){
         }
     }
 }
+
+/////////
+unsigned char make_Tone(void){
+    unsigned int period = rand() % 900;
+    if(SW2 == 0){
+        return(period);
+    }
+    else if(SW3 == 0){
+        return(period);
+    }
+    else if(SW4 == 0){
+        return(period);
+    }
+    else if(SW5 == 0){
+        return(period);
+    }
+    else{
+        return(noButton);
+    }
+}
+
+void makeSound(unsigned period){                        //How would I change this to pass it on easier, or is it even passing it on because I create the exact same period variable in the main function.
+    for(unsigned int p = 0; p < period; p --){
+        BEEPER = !BEEPER;
+    }
+}
+
+int main(void)
+{
+   OSC_config();               // Configure internal oscillator for 48 MHz
+   UBMP4_config();             // Configure on-board UBMP4 I/O devices
+    
+   while(1)
+    {
+    unsigned int period = rand() % 900;                             // I make the exact same int period variable here.
+    button = make_Tone();
+        if(button == period && SW2 == 0){
+            makeSound(period);
+        }
+        if(button == period && SW3 == 0){
+            makeSound(period);
+        }
+        if(button == period && SW4 ==0){
+            makeSound(period);
+        }
+        if(button == period && SW5 == 0){
+            makeSound(period);
+        }
 *
 * 4.   A function that converts an 8-bit binary value into its decimal
 *      equivalent would be useful for helping us to debug our programs. Create
@@ -366,4 +417,63 @@ void makeSound(int period){
 *      a value of 142 will result in the hundreds variable containing the
 *      value 1, the tens variable containing 4, and the ones variable 2. How
 *      could you test this function to verify that it works? Try it!
+
+//binary variables example
+char eighth2 = 1;
+char seventh2 = 0;
+char sixth2 = 1;
+char fifth2 = 0;
+char fourth2 = 0;
+char third2 = 0;
+char second2 = 1;
+char first2 = 0;
+
+unsigned char binaryValues(void){
+    if(eighth2 == 1){
+        eighth2 = 128;
+        return(eighth2);
+    }
+    if(seventh2 == 1){
+        seventh2 = 64;
+        return(seventh2);
+    }
+    if(sixth2 == 1){
+        sixth2 = 32;
+        return(sixth2);
+    }
+    if(fifth2 == 1){
+        fifth2 = 16;
+        return(fifth2);
+    }
+    if(fourth2 == 1){
+        fourth2 = 8;
+        return(fourth2);
+    }
+    if(third2 == 1){
+        third2 = 4;
+        return(third2);
+    }
+    if(second2 == 1){
+        second2 = 2;
+        return(second2);
+    }
+    if(first2 == 1){
+        first2 = 1;
+        return(first2);
+    }
+}
+
+int main(void)
+{
+   OSC_config();               // Configure internal oscillator for 48 MHz
+   UBMP4_config();             // Configure on-board UBMP4 I/O devices
+    
+   while(1)
+    {
+    
+    button = binaryValues();
+    unsigned char decimalNUM = eighth2 + seventh2 + sixth2 + fifth2 + fourth2 + third2 + second2 + first2;
+        if(decimalNUM == 162 && SW2 == 0){
+        LED5 = 1;
+        }
 */
