@@ -26,6 +26,18 @@ const char DOWN = 2;
 unsigned char LED5Brightness = 125;
 unsigned char button;
 
+//binary code inputs
+unsigned char eightbitValue = 237;
+unsigned char ONES;
+unsigned char TENS;
+unsigned char HUNDREDS;
+
+
+unsigned char placeValue(void){
+    ONES = eightbitValue % 10;
+    TENS = (eightbitValue / 10) % 10;
+    HUNDREDS = (eightbitValue / 100) % 10;
+}
 
 int main(void)
 {
@@ -34,13 +46,17 @@ int main(void)
     
    while(1)
     {
+        placeValue();
+        if(ONES == 7 & TENS == 3 & HUNDREDS == 2){
+            LED4 = 1;
+        }
+}
 
        // Activate bootloader if SW1 is pressed.
        if(SW1 == 0)
        {
            RESET();
        }
-   }
 }
 
 
@@ -113,7 +129,8 @@ void pwm_LED5(unsigned char);
 *      and the actual pwm_LED5() function declaration statement later in the
 *      code?
  
-The difference between the prototype and actual statement is that the pwm_LED5 protoype has a different parameter.
+The difference between the prototype and actual statement is that the prototypes are simply callings of the functions without the full body.
+Plus, the smaller difference of the callings is that the pwm_LED5 protoype has a different parameter.
 Instead of unsigned char pwmvalue, it is simply unsigned char.
 *
 * 6.   Building the program with the added function prototypes should now work
@@ -297,6 +314,7 @@ unsigned int period1 = 187;
 unsigned int period2 = 371;
 unsigned int period3 = 619;
 unsigned int period4 = 924;
+unsigned int period = rand() % 900;
 
 int main(void)
 {
@@ -306,22 +324,7 @@ int main(void)
    while(1)
     {
                                  
-        if(SW2 == 0){
-            BEEPER = !BEEPER;
-            __delay_us(period1);
-        }
-        if(SW3 == 0){
-            BEEPER = !BEEPER;
-            __delay_us(period2);
-        }
-        if(SW4 ==0){
-            BEEPER = !BEEPER;
-            __delay_us(period3);
-        }
-        if(SW5 == 0){
-            BEEPER = !BEEPER;
-            __delay_us(period4);
-        }
+
 *
 * 4.   A function that converts an 8-bit binary value into its decimal
 *      equivalent would be useful for helping us to debug our programs. Create
@@ -333,48 +336,16 @@ int main(void)
 *      could you test this function to verify that it works? Try it!
 
 //binary code inputs
-char eighth2 = 1;
-char seventh2 = 0;
-char sixth2 = 1;
-char fifth2 = 0;
-char fourth2 = 0;
-char third2 = 0;
-char second2 = 1;
-char first2 = 0;
+unsigned char eightbitValue = 237;
+unsigned char ONES;
+unsigned char TENS;
+unsigned char HUNDREDS;
 
-unsigned char binaryValues(void){   //values of binary
-    if(eighth2 == 1){
-        eighth2 = 128;
-        return(eighth2);
-    }
-    if(seventh2 == 1){
-        seventh2 = 64;
-        return(seventh2);
-    }
-    if(sixth2 == 1){
-        sixth2 = 32;
-        return(sixth2);
-    }
-    if(fifth2 == 1){
-        fifth2 = 16;
-        return(fifth2);
-    }
-    if(fourth2 == 1){
-        fourth2 = 8;
-        return(fourth2);
-    }
-    if(third2 == 1){
-        third2 = 4;
-        return(third2);
-    }
-    if(second2 == 1){
-        second2 = 2;
-        return(second2);
-    }
-    if(first2 == 1){
-        first2 = 1;
-        return(first2);
-    }
+
+unsigned char placeValue(void){
+    ONES = eightbitValue % 10;
+    TENS = (eightbitValue / 10) % 10;
+    HUNDREDS = (eightbitValue / 100) % 10;
 }
 
 int main(void)
@@ -384,94 +355,17 @@ int main(void)
     
    while(1)
     {
-    
-    button = binaryValues();
-    unsigned char decimalNUM = eighth2 + seventh2 + sixth2 + fifth2 + fourth2 + third2 + second2 + first2;
-    
-    //variables for place value
-    unsigned char varHundred = 0;
-    unsigned char varTen = 0;
-    unsigned char varOne = 0;
+        placeValue();
+        if(ONES == 7 & TENS == 3 & HUNDREDS == 2){
+            LED4 = 1;
+        }
+}
 
-//calculating hundreds
-    if(decimalNUM >= 0 && decimalNUM <= 99){
-        varHundred = 0;
-    }
-    if(decimalNUM >= 100 && decimalNUM <= 199){
-        varHundred = 1;
-    }
-    if(decimalNUM >= 200 && decimalNUM <= 255){
-        varHundred = 2;
-    }
-
-//calculating tens
-    if((decimalNUM >= 0 && decimalNUM <= 9) || (decimalNUM >= 100 && decimalNUM <= 109) || (decimalNUM >= 200 && decimalNUM <= 209)){
-        varTen = 0;
-    }
-    if((decimalNUM >= 10 && decimalNUM <= 19) || (decimalNUM >= 110 && decimalNUM <= 119) || (decimalNUM >= 210 && decimalNUM <= 219)){
-        varTen = 1;
-    }
-    if((decimalNUM >= 20 && decimalNUM <= 29) || (decimalNUM >= 120 && decimalNUM <= 129) || (decimalNUM >= 220 && decimalNUM <= 229)){
-        varTen = 2;
-    }
-    if((decimalNUM >= 30 && decimalNUM <= 39) || (decimalNUM >= 130 && decimalNUM <= 139) || (decimalNUM >= 230 && decimalNUM <= 239)){
-        varTen = 3;
-    }
-    if((decimalNUM >= 40 && decimalNUM <= 49) || (decimalNUM >= 140 && decimalNUM <= 149) || (decimalNUM >= 240 && decimalNUM <= 249)){
-        varTen = 4;
-    }
-    if((decimalNUM >= 50 && decimalNUM <= 59) || (decimalNUM >= 150 && decimalNUM <= 159) || (decimalNUM >= 250 && decimalNUM <= 259)){
-        varTen = 5;
-    }
-    if((decimalNUM >= 60 && decimalNUM <= 69) || (decimalNUM >= 160 && decimalNUM <= 169)){
-        varTen = 6;
-    }
-    if((decimalNUM >= 70 && decimalNUM <= 79) || (decimalNUM >= 170 && decimalNUM <= 179)){
-        varTen = 7;
-    }
-    if((decimalNUM >= 80 && decimalNUM <= 89) || (decimalNUM >= 180 && decimalNUM <= 189)){
-        varTen = 8;
-    }
-    if((decimalNUM >= 90 && decimalNUM <= 99) || (decimalNUM >= 190 && decimalNUM <= 199)){
-        varTen = 9;
-    }
-
-    
-//calculating ones
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 0){
-        varOne = 0;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 1){
-        varOne = 1;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 2){
-        varOne = 2;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 3){
-        varOne = 3;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 4){
-        varOne = 4;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 5){
-        varOne = 5;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 6){
-        varOne = 6;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 7){
-        varOne = 7;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 8){
-        varOne = 0;
-    }
-    if((decimalNUM - (varHundred * 100) - (varTen * 10)) == 9){
-        varOne = 9;
-    }
-
-//test code
-    if(varHundred == 1 && varTen == 6 && varOne == 2 && SW2 == 0){
-        LED5 = 1;
-    }
+       // Activate bootloader if SW1 is pressed.
+       if(SW1 == 0)
+       {
+           RESET();
+       }
+}
 
 */
