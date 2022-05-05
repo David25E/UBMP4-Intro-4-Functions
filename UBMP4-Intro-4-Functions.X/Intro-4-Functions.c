@@ -13,7 +13,7 @@ variables.
 #include    "stdbool.h"         // Include Boolean (true/false) definitions
  
 #include    "UBMP4.h"           // Include UBMP4 constants and functions
- 
+#define RAND_MAX (0x7fff)
 // TODO Set linker ROM ranges to 'default,-0-7FF' under "Memory model" pull-down.
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
  
@@ -31,13 +31,14 @@ unsigned char eightbitValue = 237;
 unsigned char ONES;
 unsigned char TENS;
 unsigned char HUNDREDS;
+unsgined int RAND_MAX(900);
 
-
-unsigned char placeValue(void){
-    ONES = eightbitValue % 10;
-    TENS = (eightbitValue / 10) % 10;
-    HUNDREDS = (eightbitValue / 100) % 10;
+void makeSound(rand()){
+    if(SW2 == 0 || SW3 == 0 || SW4 == 0 || SW5 == 0){
+        BEEPER =! BEEPER;
+    }
 }
+
 
 int main(void)
 {
@@ -46,10 +47,7 @@ int main(void)
     
    while(1)
     {
-        placeValue();
-        if(ONES == 7 & TENS == 3 & HUNDREDS == 2){
-            LED4 = 1;
-        }
+        makeSound(900);
 }
 
        // Activate bootloader if SW1 is pressed.
