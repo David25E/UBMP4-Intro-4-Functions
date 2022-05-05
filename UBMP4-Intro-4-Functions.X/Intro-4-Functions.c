@@ -13,7 +13,7 @@ variables.
 #include    "stdbool.h"         // Include Boolean (true/false) definitions
  
 #include    "UBMP4.h"           // Include UBMP4 constants and functions
-#define RAND_MAX (0x7fff)
+
 // TODO Set linker ROM ranges to 'default,-0-7FF' under "Memory model" pull-down.
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
  
@@ -26,20 +26,6 @@ const char DOWN = 2;
 unsigned char LED5Brightness = 125;
 unsigned char button;
 
-//binary code inputs
-unsigned char eightbitValue = 237;
-unsigned char ONES;
-unsigned char TENS;
-unsigned char HUNDREDS;
-unsgined int RAND_MAX(900);
-
-void makeSound(rand()){
-    if(SW2 == 0 || SW3 == 0 || SW4 == 0 || SW5 == 0){
-        BEEPER =! BEEPER;
-    }
-}
-
-
 int main(void)
 {
    OSC_config();               // Configure internal oscillator for 48 MHz
@@ -47,14 +33,14 @@ int main(void)
     
    while(1)
     {
-        makeSound(900);
-}
+
 
        // Activate bootloader if SW1 is pressed.
        if(SW1 == 0)
        {
            RESET();
        }
+    }
 }
 
 
@@ -308,11 +294,14 @@ int main(void)
 * 3.   Create a sound function that receives a parameter representing a tone's
 *      period. Modify your button function, above, to return a variable that
 *      will be passed to the sound function to make four different tones.
-unsigned int period1 = 187;
-unsigned int period2 = 371;
-unsigned int period3 = 619;
-unsigned int period4 = 924;
-unsigned int period = rand() % 900;
+
+void makeSound(unsigned int period, unsigned int duration){
+     for(int j = 0; j < duration; j++){   
+        BEEPER =! BEEPER;
+        for(int i = 0; i < period; i++);
+     }
+}
+
 
 int main(void)
 {
@@ -321,6 +310,18 @@ int main(void)
     
    while(1)
     {
+        if(SW2 == 0){
+        makeSound(900, 100);
+        }
+        if(SW3 == 0){
+            makeSound(673, 1058);
+        }
+        if(SW4 == 0){
+            makeSound(531, 478);
+        }
+        if(SW5 == 0){
+            makeSound(97, 2138);
+        }
                                  
 
 *
@@ -357,13 +358,13 @@ int main(void)
         if(ONES == 7 & TENS == 3 & HUNDREDS == 2){
             LED4 = 1;
         }
-}
 
        // Activate bootloader if SW1 is pressed.
        if(SW1 == 0)
        {
            RESET();
        }
+}
 }
 
 */
